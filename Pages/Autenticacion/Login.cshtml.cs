@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SupermarketWEB.Models;
 using System.Threading.Tasks;
-
+using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace SupermarketWEB.Pages.Autenticacion
 {
@@ -18,19 +20,33 @@ namespace SupermarketWEB.Pages.Autenticacion
                 return Page();
             }
 
-            // Aquí iría la lógica para verificar las credenciales del usuario
-            // Por ahora, según la guía, lo manejaremos en memoria.
-            if (User.Email == "test@example.com" && User.Password == "password")
+            // Verificación de credenciales en memoria
+            if (User.Email == "correo@gmail.com" && User.Password == "12345")
             {
-                // Autenticación exitosa (temporal)
-                // Aquí necesitaríamos establecer la cookie de autenticación
-                return RedirectToPage("/Index"); // Redirigir a la página principal
+                // Se crea la lista de Claims, datos a almacenar en la Cookie
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, User.Email),
+                    new Claim(ClaimTypes.Email, User.Email),
+                    // Puedes agregar más claims aquí, por ejemplo, roles
+                };
+
+                // Se asocia los claims creados a un nombre de una Cookie
+                var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+
+                // Se agrega la identidad creada al ClaimsPrincipal de la aplicación
+                ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+                // Se registra exitosamente la autenticación y se crea la cookie en el navegador
+                await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
+
+                return RedirectToPage("/Index");
             }
             else
             {
                 // Credenciales inválidas
                 ModelState.AddModelError(string.Empty, "Credenciales inválidas.");
-                return Page();
+                return Page(); // Regresa a la página de login para mostrar el error
             }
         }
 

@@ -1,6 +1,7 @@
 using SupermarketWEB.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity; 
+using Microsoft.AspNetCore.Identity;
+
 namespace SupermarketWEB
 {
     public class Program
@@ -11,6 +12,12 @@ namespace SupermarketWEB
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+
+            builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+            {
+                options.Cookie.Name = "MyCookieAuth";
+                options.LoginPath = "/Autenticacion/Login"; // Especifica la ruta de la página de inicio de sesión
+            });
 
             // 1. Agregar el contexto de la base de datos para Identity (usando la conexión existente)
             builder.Services.AddDbContext<SupermarketContext>(options =>
