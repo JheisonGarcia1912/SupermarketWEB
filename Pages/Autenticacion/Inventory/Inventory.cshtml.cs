@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace SupermarketWEB.Pages.Autenticacion.Inventory
+namespace SupermarketWEB.Pages.Inventory
 {
     public class InventoryModel : PageModel
     {

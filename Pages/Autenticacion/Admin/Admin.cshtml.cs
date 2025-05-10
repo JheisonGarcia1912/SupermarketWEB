@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace SupermarketWEB.Pages.Autenticacion.Admin
+namespace SupermarketWEB.Pages.Admin
 {
     public class AdminModel : PageModel
     {
