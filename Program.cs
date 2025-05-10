@@ -1,6 +1,6 @@
 using SupermarketWEB.Data;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Identity; 
 namespace SupermarketWEB
 {
     public class Program
@@ -12,10 +12,14 @@ namespace SupermarketWEB
             // Add services to the container.
             builder.Services.AddRazorPages();
 
-            // Agregando el contexto SupermarketContext a la aplicación
+            // 1. Agregar el contexto de la base de datos para Identity (usando la conexión existente)
             builder.Services.AddDbContext<SupermarketContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SupermarketDB"))
             );
+
+            // 2. Agregar los servicios de Identity
+            object value = builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false) // Cambié a false para simplificar por ahora
+                .AddEntityFrameworkStores<SupermarketContext>();
 
             var app = builder.Build();
 
@@ -32,7 +36,8 @@ namespace SupermarketWEB
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication(); // Habilita la autenticación
+            app.UseAuthorization(); // Habilita la autorización
 
             app.MapRazorPages();
 
